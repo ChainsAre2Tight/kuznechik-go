@@ -18,7 +18,7 @@ func Encrypt(plaintext []byte, keys *types.RoundKeys) ([]byte, error) {
 
 	result := make([]byte, 16)
 	copy(result, plaintext)
-	blck.Encrypt(plaintext, *keys)
+	blck.Encrypt(result, *keys)
 	return result, nil
 }
 
@@ -33,6 +33,6 @@ func Decrypt(ciphertext []byte, keys *types.RoundKeys) ([]byte, error) {
 
 	result := make([]byte, 16)
 	copy(result, ciphertext)
-	blck.Decrypt(ciphertext, *keys)
+	blck.Decrypt(result, *keys)
 	return result, nil
 }
