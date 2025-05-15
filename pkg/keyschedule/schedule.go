@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/scheduling"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/types"
+	"github.com/ChainsAre2Tight/kuznechik-go/pkg/types"
 )
 
 func Schedule(key string) (*types.RoundKeys, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/transforms"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/types"
+	"github.com/ChainsAre2Tight/kuznechik-go/pkg/types"
 )
 
 func Decrypt(block []byte, keys types.RoundKeys) {

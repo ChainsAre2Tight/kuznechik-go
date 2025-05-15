@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	blck "github.com/ChainsAre2Tight/kuznechik-go/internal/block"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/types"
+	"github.com/ChainsAre2Tight/kuznechik-go/pkg/types"
 )
 
 func Encrypt(plaintext []byte, keys *types.RoundKeys) ([]byte, error) {

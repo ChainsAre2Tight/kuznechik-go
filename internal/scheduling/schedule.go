@@ -3,7 +3,7 @@ package scheduling
 import (
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/tables"
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/transforms"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/types"
+	"github.com/ChainsAre2Tight/kuznechik-go/pkg/types"
 )
 
 func ScheduleKeys(masterKey []byte) types.RoundKeys {
