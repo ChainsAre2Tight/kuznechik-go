@@ -18,7 +18,7 @@ func Schedule(key string) (*types.RoundKeys, error) {
 	}
 
 	bytes := utils.StringToBytes(key)
-	if len(bytes) != 64 {
+	if len(bytes) != 32 {
 		return fail(fmt.Errorf("forbidden characters found in key"))
 	}
 
