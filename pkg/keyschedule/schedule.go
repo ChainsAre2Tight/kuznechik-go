@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/scheduling"
+	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 	"github.com/ChainsAre2Tight/kuznechik-go/pkg/types"
 )
 
@@ -12,12 +13,12 @@ func Schedule(key string) (*types.RoundKeys, error) {
 		return nil, fmt.Errorf("keyschedule.Schedule: %s", err)
 	}
 
-	if len(key) != 32 {
-		return fail(fmt.Errorf("unexexpected key string length: %d, expected: 32", len(key)))
+	if len(key) != 64 {
+		return fail(fmt.Errorf("unexexpected key string length: %d, expected: 64", len(key)))
 	}
 
-	bytes := []byte(key)
-	if len(bytes) != 32 {
+	bytes := utils.StringToBytes(key)
+	if len(bytes) != 64 {
 		return fail(fmt.Errorf("forbidden characters found in key"))
 	}
 
