@@ -10,5 +10,7 @@ func F(key [16]byte, first, second []byte) ([]byte, []byte) {
 	S(first)
 	L(first)
 	X(first, second)
-	return first, temp
+
+	copy(second, temp)
+	return first, second
 }

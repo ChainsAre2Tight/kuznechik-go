@@ -29,7 +29,6 @@ func StringToBytes(in string) []byte {
 func PlaintextToBytes(plaintext string) []byte {
 	res := []byte(plaintext)
 
-	// add padding
 	padded := AddPadding(res, 16)
 
 	return padded

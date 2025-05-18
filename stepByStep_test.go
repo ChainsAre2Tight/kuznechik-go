@@ -1,4 +1,4 @@
-package scheduling
+package kuznechikgo_test
 
 import (
 	"testing"

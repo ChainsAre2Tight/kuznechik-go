@@ -1,10 +1,11 @@
-package scheduling
+package kuznechikgo_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
+	kuznechikgo "github.com/ChainsAre2Tight/kuznechik-go"
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 )
 
@@ -35,7 +36,10 @@ func TestKeySchedule(t *testing.T) {
 			func(t *testing.T) {
 				key := utils.StringToBytes(tt.masterKey)
 
-				roundKeys := ScheduleKeys(key)
+				roundKeys, err := kuznechikgo.Schedule(key)
+				if err != nil {
+					t.Fatalf("Error: %s", err)
+				}
 				var got [10]string
 				for i, val := range roundKeys {
 					got[i] = utils.BytesToString(val)

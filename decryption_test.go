@@ -1,10 +1,10 @@
-package block
+package kuznechikgo_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/scheduling"
+	kuznechikgo "github.com/ChainsAre2Tight/kuznechik-go"
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 )
 
@@ -24,10 +24,13 @@ func TestBlockDecryption(t *testing.T) {
 		t.Run(
 			fmt.Sprintf("%s | %s -> %s", tt.masterKey, tt.plaintext, tt.ciphertext),
 			func(t *testing.T) {
-				keys := scheduling.ScheduleKeys(utils.StringToBytes(tt.masterKey))
+				keys, err := kuznechikgo.Schedule(utils.StringToBytes(tt.masterKey))
+				if err != nil {
+					t.Fatalf("Error during keyschedule: %s", err)
+				}
 				decrypted := utils.StringToBytes(tt.ciphertext)
 
-				Decrypt(decrypted, keys)
+				kuznechikgo.Decrypt(decrypted, keys)
 
 				got := utils.BytesToString(decrypted)
 				if got != tt.plaintext {
