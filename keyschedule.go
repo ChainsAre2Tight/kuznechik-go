@@ -27,15 +27,13 @@ func Schedule(masterKey []byte) (RoundKeys, error) {
 	copy(roundKeys[0], masterKey[:16]) // k1
 	copy(roundKeys[1], masterKey[16:]) // k2
 
-	// TODO: remove investigate and optimize unncessary copies
+	// TODO: optimize unncessary copies
 	for i := 1; i < 5; i++ {
 		i2 := 2 * i
 		copy(roundKeys[i2], roundKeys[i2-2])
 		copy(roundKeys[i2+1], roundKeys[i2-1])
 		for j := range 8 {
-			tempFirst, tempSecong := transforms.F(tables.Constants[8*(i-1)+j], roundKeys[i2], roundKeys[i2+1])
-			copy(roundKeys[i2], tempFirst)
-			copy(roundKeys[i2+1], tempSecong)
+			roundKeys[i2], roundKeys[i2+1] = transforms.F(tables.Constants[8*(i-1)+j], roundKeys[i2], roundKeys[i2+1])
 		}
 	}
 
