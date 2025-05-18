@@ -18,11 +18,11 @@ func Decrypt(block []byte, keys RoundKeys) ([]byte, error) {
 	result := make([]byte, 16)
 	copy(result, block)
 
-	transforms.X(block, keys[9])
+	transforms.X(result, keys[9])
 	for i := 8; i >= 0; i-- {
-		transforms.InverseL(block)
-		transforms.InverseS(block)
-		transforms.X(block, keys[i])
+		transforms.InverseL(result)
+		transforms.InverseS(result)
+		transforms.X(result, keys[i])
 	}
 
 	return result, nil

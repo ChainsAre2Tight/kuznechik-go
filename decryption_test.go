@@ -33,14 +33,17 @@ func TestBlockDecryption(t *testing.T) {
 				if err != nil {
 					t.Fatalf("Error during keyschedule: %s", err)
 				}
-				decrypted, err := hex.DecodeString(td.ciphertext)
+				ciphertext, err := hex.DecodeString(td.ciphertext)
 				if err != nil {
 					t.Fatalf("Error during decoding: %s", err)
 				}
 
-				kuznechikgo.Decrypt(decrypted, keys)
+				plaintext, err := kuznechikgo.Decrypt(ciphertext, keys)
+				if err != nil {
+					t.Fatalf("Error during decryption: %s", err)
+				}
 
-				got := fmt.Sprintf("%x", decrypted)
+				got := fmt.Sprintf("%x", plaintext)
 				if got != td.plaintext {
 					t.Errorf("\ngot  %s\nwant %s", got, td.plaintext)
 				}
