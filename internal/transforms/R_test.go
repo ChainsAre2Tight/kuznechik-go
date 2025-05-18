@@ -1,10 +1,9 @@
 package transforms
 
 import (
+	"encoding/hex"
 	"fmt"
 	"testing"
-
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 )
 
 func TestR(t *testing.T) {
@@ -21,11 +20,14 @@ func TestR(t *testing.T) {
 		t.Run(
 			fmt.Sprintf("%s -> %s", tt.in, tt.out),
 			func(t *testing.T) {
-				res := utils.StringToBytes(tt.in)
+				res, err := hex.DecodeString(tt.in)
+				if err != nil {
+					t.Fatalf("Error during decoding: %s", err)
+				}
 
 				R(res)
 
-				a := utils.BytesToString(res)
+				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
 					t.Errorf("\ngot  %s\nwant %s", a, tt.out)
 				}
@@ -48,11 +50,14 @@ func TestInverseR(t *testing.T) {
 		t.Run(
 			fmt.Sprintf("%s -> %s", tt.in, tt.out),
 			func(t *testing.T) {
-				res := utils.StringToBytes(tt.in)
+				res, err := hex.DecodeString(tt.in)
+				if err != nil {
+					t.Fatalf("Error during decoding: %s", err)
+				}
 
 				InverseR(res)
 
-				a := utils.BytesToString(res)
+				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
 					t.Errorf("\ngot  %s\nwant %s", a, tt.out)
 				}

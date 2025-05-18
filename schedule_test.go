@@ -1,12 +1,12 @@
 package kuznechikgo_test
 
 import (
+	"encoding/hex"
 	"fmt"
 	"reflect"
 	"testing"
 
 	kuznechikgo "github.com/ChainsAre2Tight/kuznechik-go"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 )
 
 func TestKeySchedule(t *testing.T) {
@@ -30,11 +30,14 @@ func TestKeySchedule(t *testing.T) {
 			},
 		},
 	}
-	for _, tt := range tt {
+	for _, td := range tt {
 		t.Run(
-			fmt.Sprintf("%s -> %s", tt.masterKey, tt.roundKeys),
+			fmt.Sprintf("%s -> %s", td.masterKey, td.roundKeys),
 			func(t *testing.T) {
-				key := utils.StringToBytes(tt.masterKey)
+				key, err := hex.DecodeString(td.masterKey)
+				if err != nil {
+					t.Fatalf("Error during decoding: %s", err)
+				}
 
 				roundKeys, err := kuznechikgo.Schedule(key)
 				if err != nil {
@@ -42,10 +45,10 @@ func TestKeySchedule(t *testing.T) {
 				}
 				var got [10]string
 				for i, val := range roundKeys {
-					got[i] = utils.BytesToString(val)
+					got[i] = fmt.Sprintf("%x", val)
 				}
-				if !reflect.DeepEqual(got, tt.roundKeys) {
-					t.Errorf("\n Master key: %s\ngot:  %s\nwant: %s", tt.masterKey, got, tt.roundKeys)
+				if !reflect.DeepEqual(got, td.roundKeys) {
+					t.Errorf("\n Master key: %s\ngot:  %s\nwant: %s", td.masterKey, got, td.roundKeys)
 				}
 			},
 		)

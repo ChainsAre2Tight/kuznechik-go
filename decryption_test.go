@@ -1,11 +1,11 @@
 package kuznechikgo_test
 
 import (
+	"encoding/hex"
 	"fmt"
 	"testing"
 
 	kuznechikgo "github.com/ChainsAre2Tight/kuznechik-go"
-	"github.com/ChainsAre2Tight/kuznechik-go/internal/utils"
 )
 
 func TestBlockDecryption(t *testing.T) {
@@ -20,21 +20,29 @@ func TestBlockDecryption(t *testing.T) {
 			"1122334455667700ffeeddccbbaa9988",
 		},
 	}
-	for _, tt := range tt {
+	for _, td := range tt {
 		t.Run(
-			fmt.Sprintf("%s | %s -> %s", tt.masterKey, tt.plaintext, tt.ciphertext),
+			fmt.Sprintf("%s | %s -> %s", td.masterKey, td.plaintext, td.ciphertext),
 			func(t *testing.T) {
-				keys, err := kuznechikgo.Schedule(utils.StringToBytes(tt.masterKey))
+
+				mk, err := hex.DecodeString(td.masterKey)
+				if err != nil {
+					t.Fatalf("Error during decoding: %s", err)
+				}
+				keys, err := kuznechikgo.Schedule(mk)
 				if err != nil {
 					t.Fatalf("Error during keyschedule: %s", err)
 				}
-				decrypted := utils.StringToBytes(tt.ciphertext)
+				decrypted, err := hex.DecodeString(td.ciphertext)
+				if err != nil {
+					t.Fatalf("Error during decoding: %s", err)
+				}
 
 				kuznechikgo.Decrypt(decrypted, keys)
 
-				got := utils.BytesToString(decrypted)
-				if got != tt.plaintext {
-					t.Errorf("\ngot  %s\nwant %s", got, tt.plaintext)
+				got := fmt.Sprintf("%x", decrypted)
+				if got != td.plaintext {
+					t.Errorf("\ngot  %s\nwant %s", got, td.plaintext)
 				}
 			},
 		)
