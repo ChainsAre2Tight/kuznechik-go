@@ -16,7 +16,7 @@ func BenchmarkX(b *testing.B) {
 	key := make([]byte, 16)
 	copy(key, block)
 	for b.Loop() {
-		transforms.X(block, key)
+		transforms.ByteX(block, key)
 	}
 
 	fmt.Println(block)

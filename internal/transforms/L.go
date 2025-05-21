@@ -11,3 +11,9 @@ func InverseL(in []byte) {
 		InverseR(in)
 	}
 }
+
+func UintL(in []uint64) {
+	for range 16 {
+		UintR(in)
+	}
+}

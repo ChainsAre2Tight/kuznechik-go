@@ -1,6 +1,7 @@
 package kuznechikgo
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/tables"
@@ -8,6 +9,8 @@ import (
 )
 
 type RoundKeys [][]byte
+
+type UintRoundKeys [][]uint64
 
 func Schedule(masterKey []byte) (RoundKeys, error) {
 	fail := func(err error) (RoundKeys, error) {
@@ -38,4 +41,19 @@ func Schedule(masterKey []byte) (RoundKeys, error) {
 	}
 
 	return roundKeys, nil
+}
+
+func KeysToUints(keys RoundKeys) UintRoundKeys {
+	values := make([]uint64, 20)
+	result := make([][]uint64, 10)
+	for i := range 10 {
+		result[i], values = values[:2], values[2:]
+	}
+
+	for i := range keys {
+		result[i][0] = binary.BigEndian.Uint64(keys[i][:8])
+		result[i][1] = binary.BigEndian.Uint64(keys[i][8:])
+	}
+
+	return result
 }
