@@ -1,9 +1,11 @@
-package transforms
+package transforms_test
 
 import (
 	"encoding/hex"
 	"fmt"
 	"testing"
+
+	"github.com/ChainsAre2Tight/kuznechik-go/internal/transforms"
 )
 
 func TestL(t *testing.T) {
@@ -25,7 +27,7 @@ func TestL(t *testing.T) {
 					t.Fatalf("Error during decoding: %s", err)
 				}
 
-				L(res)
+				transforms.L(res)
 
 				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
@@ -55,7 +57,7 @@ func TestInverseL(t *testing.T) {
 					t.Fatalf("Error during decoding: %s", err)
 				}
 
-				InverseL(res)
+				transforms.InverseL(res)
 
 				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
@@ -64,4 +66,16 @@ func TestInverseL(t *testing.T) {
 			},
 		)
 	}
+}
+
+func BenchmarkL(b *testing.B) {
+	value, err := hex.DecodeString("64a59400000000000000000000000000")
+	if err != nil {
+		b.Fatalf("error during value decoding")
+	}
+	for b.Loop() {
+		transforms.L(value)
+	}
+
+	fmt.Println(value)
 }

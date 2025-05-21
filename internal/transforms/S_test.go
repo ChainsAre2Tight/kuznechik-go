@@ -1,9 +1,11 @@
-package transforms
+package transforms_test
 
 import (
 	"encoding/hex"
 	"fmt"
 	"testing"
+
+	"github.com/ChainsAre2Tight/kuznechik-go/internal/transforms"
 )
 
 func TestSbox(t *testing.T) {
@@ -25,7 +27,7 @@ func TestSbox(t *testing.T) {
 					t.Fatalf("Error during decoding: %s", err)
 				}
 
-				S(res)
+				transforms.S(res)
 
 				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
@@ -55,7 +57,7 @@ func TestInverseSbox(t *testing.T) {
 					t.Fatalf("Error during decoding: %s", err)
 				}
 
-				InverseS(res)
+				transforms.InverseS(res)
 
 				a := fmt.Sprintf("%x", res)
 				if a != tt.out {
@@ -63,5 +65,15 @@ func TestInverseSbox(t *testing.T) {
 				}
 			},
 		)
+	}
+}
+
+func BenchmarkS(b *testing.B) {
+	block, err := hex.DecodeString("12345678901234567890123456789012")
+	if err != nil {
+		b.Fatalf("error during block decoding: %s", err)
+	}
+	for b.Loop() {
+		transforms.S(block)
 	}
 }
