@@ -19,11 +19,11 @@ func Encrypt(block []byte, keys RoundKeys) ([]byte, error) {
 	copy(result, block)
 
 	for i := 0; i < 9; i++ {
-		transforms.X(result, keys[i])
+		transforms.ByteX(result, keys[i])
 		transforms.S(result)
 		transforms.L(result)
 	}
-	transforms.X(result, keys[9])
+	transforms.ByteX(result, keys[9])
 
 	return result, nil
 }

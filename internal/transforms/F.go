@@ -6,10 +6,10 @@ func F(key [16]byte, first, second []byte) ([]byte, []byte) {
 	temp := make([]byte, 16)
 	copy(temp, first)
 
-	X(first, key[:])
+	ByteX(first, key[:])
 	S(first)
 	L(first)
-	X(first, second)
+	ByteX(first, second)
 
 	copy(second, temp)
 	return first, second
