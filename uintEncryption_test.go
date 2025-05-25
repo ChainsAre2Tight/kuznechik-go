@@ -42,10 +42,7 @@ func TestUintEncryption(t *testing.T) {
 				upper := binary.BigEndian.Uint64(plaintext[:8])
 				lower := binary.BigEndian.Uint64(plaintext[8:])
 
-				encUpper, encLower, err := kuznechikgo.UintEncrypt(upper, lower, keys)
-				if err != nil {
-					t.Fatalf("Error during encryption: %s", err)
-				}
+				encUpper, encLower := kuznechikgo.UintEncrypt(upper, lower, keys)
 
 				got := fmt.Sprintf("%0.16x%0.16x", encUpper, encLower)
 				if got != td.ciphertext {
@@ -90,7 +87,7 @@ func BenchmarkUintEncryption(b *testing.B) {
 				lower := binary.BigEndian.Uint64(plaintext[8:])
 
 				for b.Loop() {
-					upper, lower, err = kuznechikgo.UintEncrypt(upper, lower, keys)
+					upper, lower = kuznechikgo.UintEncrypt(upper, lower, keys)
 					if err != nil {
 						b.Fatalf("Error during encryption: %s", err)
 					}
