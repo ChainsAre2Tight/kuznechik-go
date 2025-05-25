@@ -42,14 +42,55 @@ func TestUintEncryption(t *testing.T) {
 				upper := binary.BigEndian.Uint64(plaintext[:8])
 				lower := binary.BigEndian.Uint64(plaintext[8:])
 
-				encUpper, encLower, err := kuznechikgo.UintEncrypt(upper, lower, keys)
-				if err != nil {
-					t.Fatalf("Error during encryption: %s", err)
-				}
+				encUpper, encLower := kuznechikgo.UintEncrypt(upper, lower, keys)
 
 				got := fmt.Sprintf("%0.16x%0.16x", encUpper, encLower)
 				if got != td.ciphertext {
 					t.Errorf("\ngot  %s\nwant %s", got, td.ciphertext)
+				}
+			},
+		)
+	}
+}
+
+func BenchmarkUintEncryption(b *testing.B) {
+	tt := []struct {
+		masterKey  string
+		plaintext  string
+		ciphertext string
+	}{
+		{
+			"8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef",
+			"1122334455667700ffeeddccbbaa9988",
+			"7f679d90bebc24305a468d42b9d4edcd",
+		},
+	}
+	for _, td := range tt {
+		b.Run(
+			fmt.Sprintf("%s | %s -> %s", td.masterKey, td.plaintext, td.ciphertext),
+			func(b *testing.B) {
+				mk, err := hex.DecodeString(td.masterKey)
+				if err != nil {
+					b.Fatalf("Error during decoding: %s", err)
+				}
+				k, err := kuznechikgo.Schedule(mk)
+				if err != nil {
+					b.Fatalf("Error during keyschedule: %s", err)
+				}
+				keys := kuznechikgo.KeysToUints(k)
+				plaintext, err := hex.DecodeString(td.plaintext)
+				if err != nil {
+					b.Fatalf("Error during decoding: %s", err)
+				}
+
+				upper := binary.BigEndian.Uint64(plaintext[:8])
+				lower := binary.BigEndian.Uint64(plaintext[8:])
+
+				for b.Loop() {
+					upper, lower = kuznechikgo.UintEncrypt(upper, lower, keys)
+					if err != nil {
+						b.Fatalf("Error during encryption: %s", err)
+					}
 				}
 			},
 		)

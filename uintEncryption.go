@@ -4,7 +4,7 @@ import (
 	"github.com/ChainsAre2Tight/kuznechik-go/internal/transforms"
 )
 
-func UintEncrypt(upper, lower uint64, keys UintRoundKeys) (uint64, uint64, error) {
+func UintEncrypt(upper, lower uint64, keys UintRoundKeys) (uint64, uint64) {
 	result := []uint64{upper, lower}
 
 	for i := 0; i < 9; i++ {
@@ -14,5 +14,5 @@ func UintEncrypt(upper, lower uint64, keys UintRoundKeys) (uint64, uint64, error
 	}
 	transforms.UintX(result, keys[9])
 
-	return result[0], result[1], nil
+	return result[0], result[1]
 }
