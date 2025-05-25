@@ -55,3 +55,47 @@ func TestUintEncryption(t *testing.T) {
 		)
 	}
 }
+
+func BenchmarkUintEncryption(b *testing.B) {
+	tt := []struct {
+		masterKey  string
+		plaintext  string
+		ciphertext string
+	}{
+		{
+			"8899aabbccddeeff0011223344556677fedcba98765432100123456789abcdef",
+			"1122334455667700ffeeddccbbaa9988",
+			"7f679d90bebc24305a468d42b9d4edcd",
+		},
+	}
+	for _, td := range tt {
+		b.Run(
+			fmt.Sprintf("%s | %s -> %s", td.masterKey, td.plaintext, td.ciphertext),
+			func(b *testing.B) {
+				mk, err := hex.DecodeString(td.masterKey)
+				if err != nil {
+					b.Fatalf("Error during decoding: %s", err)
+				}
+				k, err := kuznechikgo.Schedule(mk)
+				if err != nil {
+					b.Fatalf("Error during keyschedule: %s", err)
+				}
+				keys := kuznechikgo.KeysToUints(k)
+				plaintext, err := hex.DecodeString(td.plaintext)
+				if err != nil {
+					b.Fatalf("Error during decoding: %s", err)
+				}
+
+				upper := binary.BigEndian.Uint64(plaintext[:8])
+				lower := binary.BigEndian.Uint64(plaintext[8:])
+
+				for b.Loop() {
+					upper, lower, err = kuznechikgo.UintEncrypt(upper, lower, keys)
+					if err != nil {
+						b.Fatalf("Error during encryption: %s", err)
+					}
+				}
+			},
+		)
+	}
+}
