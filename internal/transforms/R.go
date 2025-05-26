@@ -17,25 +17,27 @@ func linear(in []byte) byte {
 	return res
 }
 
-func uintLinear(in []uint64) uint64 {
-	var res uint64
+func uintLinear(in []uint64) byte {
 
 	upper := in[0]
 	lower := in[1]
 
-	first := 7
-	second := 15
-	for range 8 {
-		res ^= uint64(tables.LinearLookup[byte(lower)][l[second]])
-		res ^= uint64(tables.LinearLookup[byte(upper)][l[first]])
-
-		upper >>= 8
-		lower >>= 8
-
-		first--
-		second--
-	}
-	return res
+	return tables.LinearLookup[byte(lower)][1] ^
+		tables.LinearLookup[byte(lower>>8)][148] ^
+		tables.LinearLookup[byte(lower>>16)][32] ^
+		tables.LinearLookup[byte(lower>>24)][133] ^
+		tables.LinearLookup[byte(lower>>32)][16] ^
+		tables.LinearLookup[byte(lower>>40)][194] ^
+		tables.LinearLookup[byte(lower>>48)][192] ^
+		tables.LinearLookup[byte(lower>>56)][1] ^
+		tables.LinearLookup[byte(upper)][251] ^
+		tables.LinearLookup[byte(upper>>8)][1] ^
+		tables.LinearLookup[byte(upper>>16)][192] ^
+		tables.LinearLookup[byte(upper>>24)][194] ^
+		tables.LinearLookup[byte(upper>>32)][16] ^
+		tables.LinearLookup[byte(upper>>40)][133] ^
+		tables.LinearLookup[byte(upper>>48)][32] ^
+		tables.LinearLookup[byte(upper>>56)][148]
 }
 
 func R(in []byte) {
@@ -65,7 +67,7 @@ func UintR(in []uint64) {
 		panic(fmt.Errorf("transforms.UintR: unexpected dst length. Expected: 2, Got: %d", len(in)))
 	}
 
-	first := uintLinear(in) << 56
+	first := uint64(uintLinear(in)) << 56
 
 	// right byteshift
 	in[1] >>= 8
